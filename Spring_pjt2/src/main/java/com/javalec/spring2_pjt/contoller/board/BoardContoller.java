@@ -1,0 +1,94 @@
+package com.javalec.spring2_pjt.contoller.board;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.MvcNamespaceHandler;
+
+import com.javalec.spring2_pjt.model.board.dto.BoardVo;
+import com.javalec.spring2_pjt.service.board.BoardService;
+
+import oracle.net.aso.k;
+
+@Controller //현재 클래스를 컨트롤 빈으로 등록
+@RequestMapping("/board/*")
+public class BoardContoller {
+	
+	private static final Logger logger
+	=LoggerFactory.getLogger(BoardContoller.class);
+	
+	//의존 관계 주입 실제로 만들어지는건 boardServceImpl
+	@Inject
+	BoardService boardService;
+	
+	@RequestMapping("list.do")
+	public ModelAndView list(@RequestParam(defaultValue="title") String search_option
+			,@RequestParam (defaultValue="")String keyword) throws Exception{
+		int count=boardService.countArticle(search_option, keyword);
+		List<BoardVo> list = boardService.listAll(search_option,keyword);
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("board/list"); //뷰를 list.jsp로 설정
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("list",list);
+		map.put("count",count);
+		map.put("search_option", search_option);
+		map.put("keyword", keyword);
+		
+		mav.addObject("map",map);
+		
+		return mav;
+		
+	}
+	
+//	@RequestMapping("write.do") 안적을시 기본 get
+	//value="url이름" method="전송방식"
+	@RequestMapping(value="write.do",method=RequestMethod.GET)
+	public String write(){
+		return "board/write";
+	}
+	
+	@RequestMapping(value="insert.do",method=RequestMethod.POST)
+	public String insert(@ModelAttribute BoardVo vo,
+			HttpSession session) throws Exception{
+		
+		//세션에 저장된 아이디를 조회
+		String writer = (String) session.getAttribute("userid");
+		vo.setWriter(writer);
+		boardService.create(vo);
+		return "redirect:/board/list.do";
+	}
+	
+//	@RequestParam get/post 방식으로 전달된 변수 1개
+//	@ModelAttribute 객체로 저장됨
+	@RequestMapping(value="view.do",method=RequestMethod.GET)
+	public ModelAndView view(@RequestParam int bno,HttpSession session) throws Exception{
+		//조회수 증가처리
+		boardService.increaseViewcnt(bno,session);
+		//모델(데이터) + 뷰(화면)을 함께 전달하는 객체
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("board/view");
+		mv.addObject("dto",boardService.read(bno));
+		return mv;
+	}
+	
+	@RequestMapping("update.do")
+	public String update(@ModelAttribute BoardVo vo,Model model) throws Exception{
+		
+		boardService.update(vo);
+		return "redirect:/board/list.do";
+	}
+
+}
