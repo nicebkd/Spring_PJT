@@ -24,9 +24,9 @@
 	<option value="all"
 	<c:out
 	value="${map.search_option=='all'?'selected':''}"/>>이름+내용+제목</option>
-	<option value="writer"
+	<option value="username"
 	<c:out
-	value="${map.search_option=='writer'?'selected':''}"/>>이름</option>
+	value="${map.search_option=='username'?'selected':''}"/>>이름</option>
 	<option value="content"
 	<c:out
 	value="${map.search_option=='content'?'selected':''}"/>>내용</option>

@@ -6,11 +6,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="board">
 	<select id="listAll" resultType="com.javalec.spring2_pjt.model.board.dto.BoardVo">
-		select bno,title,content,b.regdate,viewcnt,username
-		from tbl_board b, tbl_member m
-		<!-- 이 부분에 where절이 삽입됨 -->
-		<include refid="search"/>	
-		order by bno desc,regdate desc
+		select * from (select rownum as rn,A.*
+		from(
+		select rownum,bno,title,content,b.regdate,viewcnt,username 
+		from tbl_board b, tbl_member m 
+		<include refid="search"></include>
+		order by bno desc,regdate desc)A
+		)where rn between 1 and 10
 		
 	</select>
 	
@@ -49,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				where 
 				  b.writer=m.userid 
 				and
- 				( writer like '%'||#{keyword}||'%'
+ 				( username like '%'||#{keyword}||'%'
 				 or content like '%'||#{keyword}||'%'
    				 or title like '%'||#{keyword}||'%' )
 			</when>

@@ -36,7 +36,7 @@ public class BoardContoller {
 	
 	@RequestMapping("list.do")
 	public ModelAndView list(@RequestParam(defaultValue="title") String search_option
-			,@RequestParam (defaultValue="")String keyword) throws Exception{
+			,@RequestParam(defaultValue="")String keyword) throws Exception{
 		int count=boardService.countArticle(search_option, keyword);
 		List<BoardVo> list = boardService.listAll(search_option,keyword);
 		ModelAndView mav = new ModelAndView();
