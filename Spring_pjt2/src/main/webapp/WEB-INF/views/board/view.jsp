@@ -8,6 +8,12 @@
 <%@include file="../include/header.jsp" %>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#btnList").click(function() {
+			location.href="${path}/board/list.do?curPage=${curPage}"
+			+"&serch_option=${search_option}"
+			+"&keyword=${keyword}";
+		});b
+		
 		$("#btnUpdate").click(function() {
 // 			var writer=document.form1.writer.value;
 			var content=document.form1.content.value;
@@ -77,6 +83,7 @@
 		<button type="button" id="btnUpdate">수정</button>
 		<button type="button" id="btnDelete">삭제</button>
 	</c:if>
+	<button type="button" id="btnList">목록</button>
 	</div>
 </form>
 </body>

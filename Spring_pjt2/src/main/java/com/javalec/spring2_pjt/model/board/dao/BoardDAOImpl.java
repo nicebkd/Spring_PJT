@@ -40,12 +40,15 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public List<BoardVo> listAll(String search_option,String keyword) throws Exception {
-		Map<String,String> map = 
-				new HashMap<String,String>();
+	public List<BoardVo> listAll(int start,int end,String search_option,String keyword) throws Exception {
+		Map<String,Object> map = 
+				new HashMap<String,Object>();
 		
 		map.put("search_option", search_option);
 		map.put("keyword", keyword);
+		//between #{start} and #{end}
+		map.put("start", start);
+		map.put("end", end);
 		
 		return sqlSession.selectList("board.listAll",map);
 	}

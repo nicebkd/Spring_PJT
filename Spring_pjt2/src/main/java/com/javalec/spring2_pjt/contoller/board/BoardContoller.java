@@ -20,8 +20,10 @@ import org.springframework.web.servlet.config.MvcNamespaceHandler;
 
 import com.javalec.spring2_pjt.model.board.dto.BoardVo;
 import com.javalec.spring2_pjt.service.board.BoardService;
+import com.javalec.spring2_pjt.service.board.Pager;
 
 import oracle.net.aso.k;
+import oracle.net.aso.p;
 
 @Controller //현재 클래스를 컨트롤 빈으로 등록
 @RequestMapping("/board/*")
@@ -36,9 +38,17 @@ public class BoardContoller {
 	
 	@RequestMapping("list.do")
 	public ModelAndView list(@RequestParam(defaultValue="title") String search_option
-			,@RequestParam(defaultValue="")String keyword) throws Exception{
+			,@RequestParam(defaultValue="")String keyword
+			,@RequestParam(defaultValue="1")int curPage) throws Exception{
+		//레코드수 계산
 		int count=boardService.countArticle(search_option, keyword);
-		List<BoardVo> list = boardService.listAll(search_option,keyword);
+		//페이지 나누기 관련 처리
+		Pager pager = new Pager(count, curPage);
+		int start = pager.getPageBegin();
+		int end = pager.getPageEnd();
+				
+		
+		List<BoardVo> list = boardService.listAll(start,end,search_option,keyword);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("board/list"); //뷰를 list.jsp로 설정
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -46,6 +56,7 @@ public class BoardContoller {
 		map.put("count",count);
 		map.put("search_option", search_option);
 		map.put("keyword", keyword);
+		map.put("pager",pager);
 		
 		mav.addObject("map",map);
 		
@@ -74,13 +85,20 @@ public class BoardContoller {
 //	@RequestParam get/post 방식으로 전달된 변수 1개
 //	@ModelAttribute 객체로 저장됨
 	@RequestMapping(value="view.do",method=RequestMethod.GET)
-	public ModelAndView view(@RequestParam int bno,HttpSession session) throws Exception{
+	public ModelAndView view(@RequestParam int bno,
+			@RequestParam int curPage,
+			@RequestParam String search_option,
+			@RequestParam String keyword,
+			HttpSession session) throws Exception{
 		//조회수 증가처리
 		boardService.increaseViewcnt(bno,session);
 		//모델(데이터) + 뷰(화면)을 함께 전달하는 객체
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("board/view");
 		mv.addObject("dto",boardService.read(bno));
+		mv.addObject("curPage",curPage);
+		mv.addObject("search_option",search_option);
+		mv.addObject("keyword",keyword);
 		return mv;
 	}
 	
