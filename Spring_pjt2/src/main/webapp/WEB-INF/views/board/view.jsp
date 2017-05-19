@@ -8,11 +8,25 @@
 <%@include file="../include/header.jsp" %>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$("#btnReply").click(function() {
+			var replytext =$("#replytext").val();
+			var bno="${dto.bno}";			
+			var param="replytext="+replytext+"&bno="+bno;
+			$.ajax({
+				type: "post",
+				url: "${path}/reply/insert.do",
+				data: param,
+				success: function() {
+					alert("댓글이 등록되었습니다.")
+				}
+			});
+		});
+		
 		$("#btnList").click(function() {
 			location.href="${path}/board/list.do?curPage=${curPage}"
 			+"&serch_option=${search_option}"
 			+"&keyword=${keyword}";
-		});b
+		});
 		
 		$("#btnUpdate").click(function() {
 // 			var writer=document.form1.writer.value;
@@ -86,5 +100,14 @@
 	<button type="button" id="btnList">목록</button>
 	</div>
 </form>
+
+<c:if test="${sessionScope.userid != null }">
+<div style="width: 700px; text-align: center;">
+	<br>
+	<textarea rows="5" cols="80" placeholder="댓글을 작성하세요." id="replytext"></textarea>
+		<br>
+		<button type="button" id="btnReply">댓글쓰기</button>
+</div>
+	</c:if>
 </body>
 </html>
