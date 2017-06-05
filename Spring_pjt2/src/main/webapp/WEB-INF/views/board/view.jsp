@@ -8,18 +8,12 @@
 <%@include file="../include/header.jsp" %>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		listReply("1");//댓글 목록 불러오기
+		//listReply2();//JSON 리턴방식
 		$("#btnReply").click(function() {
-			var replytext =$("#replytext").val();
-			var bno="${dto.bno}";			
-			var param="replytext="+replytext+"&bno="+bno;
-			$.ajax({
-				type: "post",
-				url: "${path}/reply/insert.do",
-				data: param,
-				success: function() {
-					alert("댓글이 등록되었습니다.")
-				}
-			});
+			//reply();
+			reply_json();
 		});
 		
 		$("#btnList").click(function() {
@@ -64,6 +58,91 @@
 		
 		
 	});
+	
+function listReply(num) {
+	$.ajax({
+		type :"get",
+		url : "${path}/reply/list.do?bno=${dto.bno}&curPage="+num,
+		success : function(result) {
+			$("#listReply").html(result);
+		}
+	});
+}
+
+function listReply2() {
+	//contentType : "application/json", 생략가능 컨트롤러가 RestController 라서 자동만들어줌
+	$.ajax({
+		type :"get",
+		contentType : "application/json",
+		url : "${path}/reply/list_json.do?bno=${dto.bno}",
+		success : function(result) {
+//			console.log(result);
+			var output="<table>";
+			for (var i in result){
+				output+="<tr>";
+				output+="<td>"+result[i].username;
+				output+="("+result[i].regdate+")<br>";
+				output+=result[i].replytext+"</td>";
+				output+="</tr>";
+				
+			}
+			output+="</table>";
+			$("#listReply").html(output);
+		}
+	});
+}
+
+
+
+function reply(){
+	var replytext =$("#replytext").val();
+	var bno="${dto.bno}";	
+	//비밀번호 체크 여부
+	var secret_reply="n";
+	//태그.is(":속성")
+	if($("#secret_reply").is(":checked")){
+		secret_reply="y";
+	}
+	var param="replytext="+replytext+"&bno="+bno+"&secret_reply="+secret_reply;
+	$.ajax({
+		type: "post",
+		url: "${path}/reply/insert.do",
+		data: param,
+		success: function() {
+			alert("댓글이 등록되었습니다.")
+			listReply("1");
+		}
+	}); 
+}
+
+function reply_json(){
+	var replytext =$("#replytext").val();
+	var bno="${dto.bno}";	
+	//비밀번호 체크 여부
+	var secret_reply="n";
+	//태그.is(":속성")
+	if($("#secret_reply").is(":checked")){
+		secret_reply="y";
+	}
+	
+	$.ajax({
+		type: "post",
+		url: "${path}/reply/insert_rest.do",
+		headers : {
+			"Content-Type" : "application/json"
+		},
+		dataType :"text",
+		data : JSON.stringify({
+			bno : bno,
+			replytext : replytext,
+			secret_reply : secret_reply
+		}),
+		success: function() {
+			alert("댓글이 등록되었습니다.")
+			listReply("1");
+		}
+	}); 
+}
 </script>
 </head>
 <body>
@@ -106,8 +185,13 @@
 	<br>
 	<textarea rows="5" cols="80" placeholder="댓글을 작성하세요." id="replytext"></textarea>
 		<br>
+		<input type="checkbox" id="secret_reply">비밀댓글
 		<button type="button" id="btnReply">댓글쓰기</button>
 </div>
-	</c:if>
+</c:if>
+
+<!-- 댓글 -->
+<div id="listReply"></div>
+
 </body>
 </html>

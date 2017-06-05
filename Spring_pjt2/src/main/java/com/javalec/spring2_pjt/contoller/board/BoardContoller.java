@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.MvcNamespaceHandler;
 
 import com.javalec.spring2_pjt.model.board.dto.BoardVo;
 import com.javalec.spring2_pjt.service.board.BoardService;
 import com.javalec.spring2_pjt.service.board.Pager;
-
-import oracle.net.aso.k;
-import oracle.net.aso.p;
 
 @Controller //현재 클래스를 컨트롤 빈으로 등록
 @RequestMapping("/board/*")

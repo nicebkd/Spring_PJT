@@ -1,6 +1,8 @@
 package com.javalec.spring2_pjt.model.board.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -17,10 +19,14 @@ public class ReplyDAOImpl implements ReplyDAO {
 	 
 	
 	@Override
-	public List<ReplyDAO> list(Integer bno) {
+	public List<ReplyVo> list(Integer bno,int start,int end) {
+		Map<String,Object> map = new HashMap<String,Object>();
 		
+		map.put("bno",bno);
+		map.put("start",start);
+		map.put("end",end);
 		
-		return null;
+		return sqlSession.selectList("reply.listReply",map);
 	}
 
 	@Override
@@ -39,6 +45,12 @@ public class ReplyDAOImpl implements ReplyDAO {
 	public void delete(Integer rno) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int count(int bno) {
+		
+		return sqlSession.selectOne("reply.count",bno);
 	}
 
 

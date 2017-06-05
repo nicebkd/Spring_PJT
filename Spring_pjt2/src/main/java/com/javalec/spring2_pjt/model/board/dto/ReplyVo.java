@@ -10,6 +10,19 @@ public class ReplyVo {
 	private String username;
 	private Date regdate;
 	private Date updatedate;
+	private String secret_reply;
+	private String writer;
+	
+	
+	
+	
+	
+	public String getSecret_reply() {
+		return secret_reply;
+	}
+	public void setSecret_reply(String secret_reply) {
+		this.secret_reply = secret_reply;
+	}
 	public Integer getRno() {
 		return rno;
 	}
@@ -56,6 +69,12 @@ public class ReplyVo {
 	public String toString() {
 		return "ReplyVo [rno=" + rno + ", bno=" + bno + ", replytext=" + replytext + ", replyer=" + replyer
 				+ ", username=" + username + ", regdate=" + regdate + ", updatedate=" + updatedate + "]";
+	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
 	}
 
 	

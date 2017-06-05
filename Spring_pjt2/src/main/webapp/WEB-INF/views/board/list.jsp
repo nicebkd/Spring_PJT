@@ -64,7 +64,12 @@ ${map.count }개의 게시물이 있습니다.
 			&curPage=${map.pager.curPage}
 			&search_option=${map.search_option}
 			&keyword=${map.keyword}">
-			${row.title }</a></td>
+			${row.title }</a>
+			<!-- 댓글 갯수 출력 -->
+			<c:if test="${row.cnt >0 }">
+			<span style="color: red">(${row.cnt})</span> 
+			</c:if>
+			</td>
 			<td>${row.username }</td>
 			<td>
 			<fmt:formatDate value="${row.regdate }" pattern="yyyy-MM-dd HH:mm:ss"/></td>

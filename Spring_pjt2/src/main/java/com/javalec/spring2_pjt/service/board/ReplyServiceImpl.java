@@ -3,6 +3,7 @@ package com.javalec.spring2_pjt.service.board;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +17,31 @@ public class ReplyServiceImpl implements ReplyService{
 	ReplyDAO replyDao;
 	
 	@Override
-	public List<ReplyDAO> list(Integer bno) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ReplyVo> list(Integer bno,int start,int end,HttpSession session) {
+		
+		List<ReplyVo> items = replyDao.list(bno,start,end);
+		//현재 사용자
+		String userid=(String) session.getAttribute("userid");
+		for(ReplyVo vo : items){
+			if(vo.getSecret_reply().equals("y")){
+				 if(userid == null){
+					 vo.setReplytext("비밀 댓글입니다.");
+				 }else{
+					 //게시물 작성자
+					 String writer = vo.getWriter();
+					 //댓글 작성자
+					 String replyer = vo.getReplyer();
+					 if(!userid.equals(writer) &&
+							 !userid.equals(replyer)){
+						 vo.setReplytext("비밀 댓글입니다.");
+					 }
+				 }
+			}
+
+		}
+		
+		return items;
+		
 	}
 
 	@Override
@@ -36,6 +59,12 @@ public class ReplyServiceImpl implements ReplyService{
 	public void delete(Integer rno) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int count(int bno) {
+		
+		return replyDao.count(bno);
 	}
 
 }
