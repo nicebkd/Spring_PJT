@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.javalec.spring2_pjt.model.board.dto.BoardVo;
 import com.javalec.spring2_pjt.service.board.BoardService;
 import com.javalec.spring2_pjt.service.board.Pager;
+import com.javalec.spring2_pjt.service.board.ReplyService;
 
 @Controller //현재 클래스를 컨트롤 빈으로 등록
 @RequestMapping("/board/*")
@@ -31,6 +32,8 @@ public class BoardContoller {
 	//의존 관계 주입 실제로 만들어지는건 boardServceImpl
 	@Inject
 	BoardService boardService;
+	@Inject
+	ReplyService replyService;
 	
 	@RequestMapping("list.do")
 	public ModelAndView list(@RequestParam(defaultValue="title") String search_option
@@ -92,6 +95,7 @@ public class BoardContoller {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("board/view");
 		mv.addObject("dto",boardService.read(bno));
+		mv.addObject("count",replyService.count(bno));
 		mv.addObject("curPage",curPage);
 		mv.addObject("search_option",search_option);
 		mv.addObject("keyword",keyword);
@@ -102,6 +106,13 @@ public class BoardContoller {
 	public String update(@ModelAttribute BoardVo vo,Model model) throws Exception{
 		
 		boardService.update(vo);
+		return "redirect:/board/list.do";
+	}
+	
+	@RequestMapping("delete.do")
+	public String delete(@RequestParam int bno) throws Exception{
+		
+		boardService.delete(bno);
 		return "redirect:/board/list.do";
 	}
 

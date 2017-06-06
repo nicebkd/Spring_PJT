@@ -20,6 +20,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	values ((select nvl(max(bno)+1,1) from tbl_board),#{title},#{content},#{writer})
 	</insert>
 	
+	<delete id="delete">
+		delete from tbl_board where bno=#{bno}
+	</delete>
+	
 	<select id="view" resultType="com.javalec.spring2_pjt.model.board.dto.BoardVo">
 		select bno,title,content,b.regdate,viewcnt,username,writer
 		from tbl_board b, tbl_member m

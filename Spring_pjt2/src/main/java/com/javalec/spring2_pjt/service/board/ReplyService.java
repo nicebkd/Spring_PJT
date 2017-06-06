@@ -12,4 +12,5 @@ public interface ReplyService {
 	public void updaet(ReplyVo vo);
 	public void delete(Integer rno);
 	public int count(int bno);
+	public ReplyVo detail(int rno);
 }

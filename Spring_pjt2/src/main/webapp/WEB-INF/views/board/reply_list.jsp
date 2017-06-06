@@ -6,6 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@include file="../include/header.jsp" %>
 <title>Insert title here</title>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	
+	});
+	
+
+</script>
 </head>
 <body>
 <table style="width: 700px;">
@@ -14,6 +22,10 @@
 	<td>${row.username }(<fmt:formatDate value="${row.regdate }" pattern="yyyy-MM-dd HH:mm:ss"/>)
 	<br>
 	${row.replytext}
+	<!-- 본인 댓글 수정 -->
+	<c:if test="${sessionScope.userid == row.replyer }">
+	<input type="button" value="Modify" onclick="showModify('${row.rno}')">
+	</c:if>
 	</td>
 </tr>
 </c:forEach>

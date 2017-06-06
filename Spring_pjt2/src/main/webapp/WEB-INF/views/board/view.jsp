@@ -9,11 +9,27 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		listReply("1");//댓글 목록 불러오기
+		//listReply("1");//댓글 목록 불러오기
+		listReply_rest("1"); //댓글 목록(rest방식)
 		//listReply2();//JSON 리턴방식
 		$("#btnReply").click(function() {
 			//reply();
 			reply_json();
+		});
+		
+		$("#btnDelete").click(function() {
+			var count="${count}"; //댓글의 갯수
+			if(count >0){
+				alert("댓글이 있는 게시물은 삭제 할 수 없습니다.");
+				return;
+			}
+			if(confirm("삭제 하시겠습니까?")){
+				document.form1.action=
+					"${path}/board/delete.do?bno=${dto.bno}";
+					document.form1.submit();
+			}		
+			
+			
 		});
 		
 		$("#btnList").click(function() {
@@ -64,7 +80,19 @@ function listReply(num) {
 		type :"get",
 		url : "${path}/reply/list.do?bno=${dto.bno}&curPage="+num,
 		success : function(result) {
+			// responseText가 result에 저장됨
 			$("#listReply").html(result);
+		}
+	});
+}
+
+function listReply_rest(num) {
+	$.ajax({
+		type : "get",
+		url : "${path}/reply/list/${dto.bno}/"+num,
+		success : function(result) {
+		// responseText가 result에 저장됨
+		$("#listReply").html(result);
 		}
 	});
 }
@@ -139,11 +167,39 @@ function reply_json(){
 		}),
 		success: function() {
 			alert("댓글이 등록되었습니다.")
-			listReply("1");
+			//listReply("1");
+			listReply_rest("1");
 		}
 	}); 
 }
+
+function showModify(rno) {
+	
+	$.ajax({
+		type : "get",
+		url : "${path}/reply/detail/"+rno,
+		success : function(result) {
+			$("#modifyReply").html(result);
+			$("#modifyReply").css("visibility","visible")
+		}
+	});
+}
 </script>
+<style type="text/css">
+#modifyReply{
+	width: 300px;
+	height: 100px;
+	background-color: gray;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -150px;
+	padding: 10px;
+	z-index: 10;
+	visibility: hidden;
+}
+</style>
 </head>
 <body>
 <%@include file="../include/menu.jsp" %>
@@ -190,8 +246,9 @@ function reply_json(){
 </div>
 </c:if>
 
-<!-- 댓글 -->
+<!-- 댓글 목록 출력-->
 <div id="listReply"></div>
-
+<!-- 댓글 수정 화면 -->
+<div id="modifyReply">댓글 수정 화면 영역</div>
 </body>
 </html>

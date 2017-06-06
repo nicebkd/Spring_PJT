@@ -50,7 +50,7 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void delete(int bno) throws Exception {
-		
+		boardDao.delete(bno);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.javalec.spring2_pjt.contoller.board;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.javalec.spring2_pjt.model.board.dto.ReplyVo;
 import com.javalec.spring2_pjt.service.board.Pager;
 import com.javalec.spring2_pjt.service.board.ReplyService;
-
-import oracle.net.aso.s;
 
 
 // http://localhost:8080/spring02/view.do?bno=1
@@ -89,12 +84,12 @@ public class ReplyController {
 // /reply/list/2 => 2번 게시물의 댓글 목록 리턴
 // /@@PathVariable : url에 입력될 변수값 지정
 
-//
-	@RequestMapping(value="/list/{bno}"
+//http://localhost:8282/spring2_pjt/reply/list/1000/1 1000번게시물 1페이지
+	@RequestMapping(value="/list/{bno}/{curPage}"
 			,method=RequestMethod.GET)
 	public ModelAndView reply_list(
 			@PathVariable("bno")int bno,
-			@RequestParam(defaultValue="1")int curPage,
+			@PathVariable int curPage,
 			ModelAndView mav,
 			HttpSession session){
 		int count = replyService.count(bno);//댓글 갯수
@@ -158,6 +153,54 @@ public class ReplyController {
 		
 		List<ReplyVo> list = replyService.list(bno,start,end,session);
 		return list;
+	}
+	
+	@RequestMapping(value="/detail/{rno}",method=RequestMethod.GET)
+	public ModelAndView reply_detail(@PathVariable("rno") int rno,
+			ModelAndView mav){
+		
+		ReplyVo vo = replyService.detail(rno);
+		mav.setViewName("board/reply_detail");
+		mav.addObject("vo",vo);
+		return mav;
+	}
+	
+	@RequestMapping(value="/update/{rno}"
+			,method={RequestMethod.PUT,RequestMethod.PATCH})
+	public ResponseEntity<String> update(
+			@PathVariable("rno") int rno,@RequestBody ReplyVo vo){
+		ResponseEntity<String> entity = null;
+		try{
+			vo.setRno(rno);
+			//서비스 호출
+			replyService.updaet(vo);
+			entity = new ResponseEntity<String>("success",HttpStatus.OK);
+		}catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(e.getMessage()
+					,HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+			
+	}
+	
+	@RequestMapping(value="/delete/{rno}",
+			method= RequestMethod.DELETE)
+	public ResponseEntity<String> delete(
+			@PathVariable("rno") int rno){
+		ResponseEntity<String> entity = null;
+		
+		try{
+			replyService.delete(rno);
+			entity = new ResponseEntity<String>("success",HttpStatus.OK);
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+		return entity;
+		
 	}
 
 	
