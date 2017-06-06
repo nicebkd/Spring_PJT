@@ -11,6 +11,7 @@ public class BoardVo {
 	private int viewcnt;
 	private String username;
 	private int cnt;
+	private String show;
 	
 	
 	
@@ -70,6 +71,14 @@ public class BoardVo {
 	public String toString() {
 		return "BoardVo [bno=" + bno + ", title=" + title + ", content=" + content + ", writer=" + writer + ", regdate="
 				+ regdate + ", viewcnt=" + viewcnt + "]";
+	}
+
+	public String getShow() {
+		return show;
+	}
+
+	public void setShow(String show) {
+		this.show = show;
 	}
 	
 	

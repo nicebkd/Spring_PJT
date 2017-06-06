@@ -57,7 +57,10 @@ ${map.count }개의 게시물이 있습니다.
 		<td>조회수</td>		
 	</tr> 
 	<c:forEach var="row" items="${map.list }">
-		<tr>
+	<c:choose>
+	<c:when test="${row.show =='y' }">
+		<!-- show컬럼이 y일때	 -->
+			<tr>
 			<td>${row.bno }</td>
 			<td>
 			<a href="${path }/board/view.do?bno=${row.bno}
@@ -76,6 +79,17 @@ ${map.count }개의 게시물이 있습니다.
 			<td>${row.viewcnt }</td>
 			
 		</tr>
+	</c:when>
+	<c:otherwise>
+		<!-- show 컬럼이 n일때 -->
+		<tr>
+			<td colspan="5" align="center">
+				삭제된 게시물 입니다.
+			</td>
+		</tr>
+	</c:otherwise>
+	</c:choose>
+	
 	</c:forEach>
 	<tr>
 		<td colspan="5" align="center">

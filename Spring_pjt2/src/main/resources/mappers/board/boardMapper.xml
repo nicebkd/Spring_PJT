@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="board">
 	<select id="listAll" resultType="com.javalec.spring2_pjt.model.board.dto.BoardVo">
 		<include refid="paging_header"/>
-		select rownum,bno,title,content,b.regdate,viewcnt,username,
+		select rownum,bno,title,content,b.regdate,viewcnt,username,show,
 		(select count(*) from tbl_reply where bno=b.bno) cnt 
 		from tbl_board b, tbl_member m 
 		<include refid="search"></include>
@@ -16,16 +16,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="insert">
-		insert into tbl_board(bno,title,content,writer)
-	values ((select nvl(max(bno)+1,1) from tbl_board),#{title},#{content},#{writer})
+		insert into tbl_board(bno,title,content,writer,show)
+	values ((select nvl(max(bno)+1,1) from tbl_board),#{title},#{content},#{writer},'y')
 	</insert>
 	
-	<delete id="delete">
+	<!-- <delete id="delete">
 		delete from tbl_board where bno=#{bno}
 	</delete>
+	 -->
+	<update id="delete">
+		update tbl_board
+		set show='n'
+		where bno=#{bno}
+	</update>
 	
 	<select id="view" resultType="com.javalec.spring2_pjt.model.board.dto.BoardVo">
-		select bno,title,content,b.regdate,viewcnt,username,writer
+		select bno,title,content,b.regdate,viewcnt,username,writer,show
 		from tbl_board b, tbl_member m
 		where b.writer=m.userid and bno=#{bno}
 	</select>
