@@ -18,7 +18,7 @@ public class LogAdvice {
 // 포인트컷 - 실행 시점, Around - 실행 전후
 //  Before, After, Around	
 // 컨트롤러,서비스,dao의 모든 method 실행 전후에 logPrint method가 호출됨
-	@Around("execution(* com.javalec.spring2_pjt.contoller..*Controller.*(..))"
+	@Around("execution(* com.javalec.spring2_pjt.controller..*Controller.*(..))"
 			+ " or execution(* com.javalec.spring2_pjt.service..*Impl.*(..))"
 			+ " or execution(* com.javalec.spring2_pjt.model..dao.*Impl.*(..))")
 	public Object logPrint(ProceedingJoinPoint joinPoint) throws Throwable{

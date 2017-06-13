@@ -1,4 +1,4 @@
-package com.javalec.spring2_pjt.contoller.message;
+package com.javalec.spring2_pjt.controller.message;
 
 import javax.inject.Inject;
 

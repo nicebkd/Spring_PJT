@@ -1,4 +1,4 @@
-package com.javalec.spring2_pjt.contoller.board;
+package com.javalec.spring2_pjt.controller.board;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javalec.spring2_pjt.model.board.dto.BoardVo;
@@ -24,10 +25,10 @@ import com.javalec.spring2_pjt.service.board.ReplyService;
 
 @Controller //현재 클래스를 컨트롤 빈으로 등록
 @RequestMapping("/board/*")
-public class BoardContoller {
+public class BoardController {
 	
 	private static final Logger logger
-	=LoggerFactory.getLogger(BoardContoller.class);
+	=LoggerFactory.getLogger(BoardController.class);
 	
 	//의존 관계 주입 실제로 만들어지는건 boardServceImpl
 	@Inject
@@ -36,7 +37,7 @@ public class BoardContoller {
 	ReplyService replyService;
 	
 	@RequestMapping("list.do")
-	public ModelAndView list(@RequestParam(defaultValue="title") String search_option
+	public @ResponseBody ModelAndView list(@RequestParam(defaultValue="title") String search_option
 			,@RequestParam(defaultValue="")String keyword
 			,@RequestParam(defaultValue="1")int curPage) throws Exception{
 		//레코드수 계산

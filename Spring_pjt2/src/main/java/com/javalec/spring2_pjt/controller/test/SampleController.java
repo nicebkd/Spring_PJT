@@ -1,4 +1,4 @@
-package com.javalec.spring2_pjt.contoller.test;
+package com.javalec.spring2_pjt.controller.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;

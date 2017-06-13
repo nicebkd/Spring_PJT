@@ -1,4 +1,4 @@
-package com.javalec.spring2_pjt.contoller.member;
+package com.javalec.spring2_pjt.controller.member;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;

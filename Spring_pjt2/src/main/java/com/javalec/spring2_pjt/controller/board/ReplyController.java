@@ -1,4 +1,4 @@
-package com.javalec.spring2_pjt.contoller.board;
+package com.javalec.spring2_pjt.controller.board;
 
 import java.util.List;
 
